@@ -1,22 +1,16 @@
-###
-# swagger-ui-builder - https://github.com/wordnik/swagger-ui/
-# Container for building the swagger-ui static site
-#
-# Build: docker build -t swagger-ui-builder .
-# Run:   docker run -v $PWD/dist:/build/dist swagger-ui-builder
-#
-###
+FROM node:alpine
+MAINTAINER jeremy.vaillant@dazzl.tv
 
-FROM    ubuntu:14.04
-MAINTAINER dnephin@gmail.com
+WORKDIR /app
 
-ENV     DEBIAN_FRONTEND noninteractive
+RUN apk add --no-cache git openjdk7-jre
 
-RUN     apt-get update && apt-get install -y git npm nodejs openjdk-7-jre
-RUN     ln -s /usr/bin/nodejs /usr/local/bin/node
+ADD package.json /app/package.json
+ADD . /app
 
-WORKDIR /build
-ADD     package.json    /build/package.json
-RUN     npm install
-ADD     .   /build
-CMD     ./node_modules/gulp/bin/gulp.js serve
+RUN npm install
+RUN npm run build
+
+RUN apk del git openjdk7-jre
+
+CMD ./node_modules/gulp/bin/gulp.js serve
