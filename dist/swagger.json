@@ -1,1069 +1,2655 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "title": "Maps4News API",
-        "version": "0.1"
-    },
-    "host": "api.maps4news.com",
-    "schemes": [
-        "https"
-    ],
-    "basePath": "/v1",
-    "produces": [
-        "application/json"
-    ],
-    "paths": {
-        "/login": {
-            "post": {
-                "description": "This endpoint allows the user to authenticate and obtain an api key.\n",
-                "parameters": [
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "The user's email",
-                        "required": true,
-                        "type": "string",
-                        "format": "email"
-                    },
-                    {
-                        "name": "password",
-                        "in": "query",
-                        "description": "The user's password",
-                        "required": true,
-                        "type": "string",
-                        "format": "password"
-                    }
-                ],
-                "tags": [
-                    "User",
-                    "Authentication"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Api Token",
-                        "schema": {
-                            "$ref": "#/definitions/Token"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    },
-                    "401": {
-                        "description": "Invalid or missing api token",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
+  "host": "api.dazzl.local",
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/",
+  "swagger": "2.2.4",
+  "info": {
+    "version": "v1",
+    "description": "# Service API for Dazzl\n\nApi for management accounts and services to dazzl.tv\n",
+    "title": "Dazzl API",
+    "contact": {
+      "name": "Dazzl API support",
+      "email": "api@dazzl.tv"
+    }
+  },
+  "paths": {
+    "/cgus.json": {
+      "get": {
+        "description": "# List all CGUs\n\nList all CGU present in Database.\n\n**Request just for admin user**\n",
+        "summary": "List CGUs",
+        "tags": [
+          "cgus"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Cgu"
+              }
             }
+          }
         },
-        "/users": {
-            "get": {
-                "description": "Get all users you have acess to.\n\n- Organisation admins will get all users in their organisation.\n\n- Normal users will only get their own user object.\n",
-                "tags": [
-                    "User"
-                ],
-                "security": [
-                    {
-                        "api_key": []
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Array of user objects.",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/User"
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Invalid or missing api token.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/{id}": {
-            "get": {
-                "description": "Used to get a user that you have access to.",
-                "tags": [
-                    "User"
-                ],
-                "security": [
-                    {
-                        "api_key": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "$ref": "#/parameters/id"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User object.",
-                        "schema": {
-                            "$ref": "#/definitions/User"
-                        }
-                    },
-                    "401": {
-                        "description": "Invalid or missing api token.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/me": {
-            "get": {
-                "description": "Alias of `/users/{id}`. (All subroutes are compatible. e.g. `/users/me/svgs`)\n\nGet the current users's object\n",
-                "tags": [
-                    "User"
-                ],
-                "security": [
-                    {
-                        "api_key": []
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Array of svg objects.",
-                        "schema": {
-                            "$ref": "#/definitions/User"
-                        }
-                    },
-                    "401": {
-                        "description": "Invalid or missing api token.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/{id}/dimensions": {
-            "get": {
-                "description": "Get all the dimensions the user has access to.",
-                "tags": [
-                    "User",
-                    "Dimension"
-                ],
-                "security": [
-                    {
-                        "api_key": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "$ref": "#/parameters/id"
-                    },
-                    {
-                        "$ref": "#/parameters/page"
-                    },
-                    {
-                        "$ref": "#/parameters/per_page"
-                    },
-                    {
-                        "$ref": "#/parameters/X-Page"
-                    },
-                    {
-                        "$ref": "#/parameters/X-Per-Page"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Array of dimension objects.",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Dimension"
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Invalid or missing api token.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/{id}/svgs": {
-            "get": {
-                "description": "Get all the svgs the user has access to.",
-                "tags": [
-                    "User",
-                    "Svg"
-                ],
-                "security": [
-                    {
-                        "api_key": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "$ref": "#/parameters/id"
-                    },
-                    {
-                        "$ref": "#/parameters/page"
-                    },
-                    {
-                        "$ref": "#/parameters/per_page"
-                    },
-                    {
-                        "$ref": "#/parameters/X-Page"
-                    },
-                    {
-                        "$ref": "#/parameters/X-Per-Page"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Array of svg objects.",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Svg"
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Invalid or missing api token.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
-            }
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": {
         }
+      },
+      "post": {
+        "description": "# Create a new CGU\n\nCreate a new CGU for Dazzl service.\n\nThe text markdown it's an object who content a string with local.\n[See MongoID docs](https://docs.mongodb.com/ruby-driver/master/tutorials/5.1.0/mongoid-documents/#localized-fields)\n",
+        "summary": "Create a new CGU",
+        "tags": [
+          "cgus"
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "cgu",
+            "in": "body",
+            "description": "Cgu informations",
+            "schema": {
+              "$ref": "#/definitions/Cgu"
+            },
+            "required": true
+          }
+        ]
+      }
     },
-    "parameters": {
-        "id": {
+    "/cgus/{id}.json": {
+      "get": {
+        "description": "# Return a CGU.\n\nContains a Terms of Service used by Dazzl.\n\nChange Content-Type for rendering to markdown, html or json format :\n* application/json : json (default)\n* text/plain : markdown\n* text/html : html\n\n**If you asking json form all information to CGU is given, but for markdown and\nhtml just a text is returned**\n",
+        "summary": "Show a CGU",
+        "tags": [
+          "cgus"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Cgu"
+            }
+          }
+        },
+        "produces": [
+          "application/json",
+          "text/plain",
+          "text/html"
+        ],
+        "consumes": [
+          "application/json",
+          "text/plain",
+          "text/html"
+        ],
+        "parameters": [
+          {
             "name": "id",
             "in": "path",
-            "description": "The ID of the resource.",
-            "required": true,
-            "type": "integer"
-        },
-        "page": {
-            "name": "page",
-            "in": "query",
-            "description": "The page you want to visit.\n\n- Default: 1\n",
-            "required": false,
-            "type": "integer"
-        },
-        "per_page": {
-            "name": "per_page",
-            "in": "query",
-            "description": "The number of resources on one page\n\n- Default: 12\n\n- Minimum: 1\n\n- Maximum: 50\n",
-            "type": "integer",
-            "required": false
-        },
-        "X-Per-Page": {
-            "name": "X-Per-Page",
-            "in": "header",
-            "description": "Same as `per_page`",
-            "type": "integer",
-            "required": false
-        },
-        "X-Page": {
-            "name": "X-Page",
-            "in": "header",
-            "type": "integer",
-            "description": "Same as `page`",
-            "required": false
-        }
-    },
-    "securityDefinitions": {
-        "api_key": {
-            "type": "apiKey",
-            "name": "X-Api-Token",
-            "description": "The api token",
-            "in": "header"
-        }
-    },
-    "definitions": {
-        "timestamp": {
+            "description": "Identifier cgu",
             "type": "string",
-            "format": "DateTime",
-            "description": "ISO 8601/RFC3339 formatted DateTime",
-            "example": "2016-03-17T16:35:01.000Z"
+            "required": true
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "Format response",
+            "type": "string",
+            "required": false,
+            "enum": [
+              "application/json",
+              "text/plain",
+              "text/html"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "description": "# Update CGU\nUpdate a CGU given in path parameter. If you use PUT verb you replace all fields and\nif you use PATCH verb you replace just field with data given.\n",
+        "summary": "Update CGU",
+        "tags": [
+          "cgus"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          }
         },
-        "Token": {
-            "type": "object",
-            "properties": {
-                "token": {
-                    "type": "string",
-                    "description": "Unique user token used for identification",
-                    "example": "Pjde6XYkfOhRErZaFn0ibNVbXGP4CE8UcUpMDBg4"
-                }
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Cgu identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "patch": {
+        "description": "# Update CGU\nUpdate a CGU given in path parameter. If you use PUT verb you replace all fields and\nif you use PATCH verb you replace just field with data given.\n",
+        "summary": "Update CGU",
+        "tags": [
+          "cgus"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Cgu identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "description": "# Delete CGU\nDelete a CGU given in path parameter.\n",
+        "summary": "Destroy a CGU",
+        "tags": [
+          "cgus"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Cgu identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/cgus/current.json": {
+      "get": {
+        "description": "# Last CGU\n\nReturn text of last CGU version existed.\n\nChange Content-Type for rendering to markdown, html or json format :\n* application/json : json (default)\n* text/plain : markdown\n* text/html : html\n",
+        "summary": "Last cgu",
+        "tags": [
+          "cgus"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Cgu"
             }
+          }
         },
-        "Error": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string",
-                    "description": "Error message",
-                    "example": "An error occoured"
-                }
-            }
+        "produces": [
+          "application/json",
+          "text/plain",
+          "text/html"
+        ],
+        "consumes": [
+          "application/json",
+          "text/plain",
+          "text/html"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "Format response",
+            "type": "string",
+            "required": false,
+            "enum": [
+              "application/json",
+              "text/plain",
+              "text/html"
+            ]
+          }
+        ]
+      }
+    },
+    "/cgus/{id}/version.json": {
+      "get": {
+        "description": "# Version of CGU\nReturn a version to CGU given in parameter.\n",
+        "summary": "Version CGU",
+        "tags": [
+          "cgus"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
         },
-        "Contract": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "example": "string"
-                },
-                "organisation": {
-                    "$ref": "#/definitions/Organisation"
-                },
-                "credits": {
-                    "type": "integer",
-                    "description": "The amount of credits that this contract adds to the organisation. If the value is 0 then the contract is a flatrate contract.",
-                    "example": 100
-                },
-                "credit_period": {
-                    "type": "integer",
-                    "description": "The number of credits that can be used within a certain period."
-                },
-                "period_length": {
-                    "type": "integer",
-                    "description": "The lenght of a period, in days."
-                },
-                "date_start": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "date_end": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Cgu identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/cgus/{id}/accept.json": {
+      "post": {
+        "summary": "Accept CGU",
+        "tags": [
+          "cgus"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
         },
-        "Dimension": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 47
-                },
-                "dimension_set_id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "A5 landscape"
-                },
-                "width": {
-                    "type": "number",
-                    "format": "float"
-                },
-                "height": {
-                    "type": "number",
-                    "format": "float"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Cgu identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/cgus/accepted.json": {
+      "get": {
+        "description": "# Accepted CGU\n",
+        "summary": "Accepted CGU",
+        "tags": [
+          "cgus"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "200": {
+            "description": "OK"
+          }
         },
-        "DimensionSet": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Standard"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "dimensions": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Dimension"
-                    }
-                }
-            }
-        },
-        "Faq": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "description": "Identifier",
-                    "example": 1
-                },
-                "title": {
-                    "type": "string",
-                    "description": "Question",
-                    "example": "Frequently asked question"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Answer",
-                    "example": "Unescaped HTML formatted answer"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "Feature": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 4
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Web"
-                },
-                "description": {
-                    "type": "string",
-                    "example": "Allows web output"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "Font": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "example": "Helvetica-Condensed-Bold"
-                },
-                "style": {
-                    "type": "string",
-                    "enum": [
-                        "normal",
-                        "italic",
-                        "oblique",
-                        "bold",
-                        "thin"
-                    ],
-                    "example": "normal"
-                },
-                "weight": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "example": 700
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "FontFamily": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "example": "Helvetica Condensed"
-                },
-                "fonts": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Font"
-                    }
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "IP": {
-            "type": "object",
-            "properties": {
-                "user_id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "ip_address": {
-                    "type": "string",
-                    "description": "IPv4 or IPv6 address"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "Job": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "user_id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "mapstyle_set": {
-                    "$ref": "#/definitions/MapstyleSet"
-                },
-                "title": {
-                    "type": "string",
-                    "description": "Title for the job"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Description of the job"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "JobResult": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "job": {
-                    "$ref": "#/definitions/Job"
-                },
-                "job_revision": {
-                    "$ref": "#/definitions/JobRevision"
-                },
-                "mapstyle": {
-                    "$ref": "#/definitions/Mapstyle"
-                },
-                "status": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "software_version": {
-                    "type": "integer",
-                    "format": "double",
-                    "example": 1,
-                    "description": "The version of the backend that was used"
-                },
-                "interface_version": {
-                    "type": "string",
-                    "example": "2.6.0b",
-                    "description": "The version of the frontend that was used"
-                },
-                "fix": {
-                    "type": "boolean",
-                    "example": true
-                },
-                "process_start": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "process_end": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "dealt_with": {
-                    "type": "boolean",
-                    "example": true,
-                    "description": "If the issue has been resolved"
-                },
-                "log": {
-                    "type": "string",
-                    "description": "The  log from the render job"
-                },
-                "preview_path": {
-                    "type": "string"
-                },
-                "file_path": {
-                    "type": "string"
-                },
-                "bought": {
-                    "type": "boolean",
-                    "example": true,
-                    "description": "If the user paid for the map with a credit"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "JobRevision": {
-            "type": "object",
-            "properties": {
-                "job_id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "revision": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "object": {
-                    "type": "string",
-                    "format": "json"
-                },
-                "screenshot_url": {
-                    "type": "string",
-                    "example": "http://url.to/image.png"
-                },
-                "archived": {
-                    "type": "boolean",
-                    "description": "If the revision was used in a render job"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "JobShare": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "job": {
-                    "$ref": "#/definitions/Job"
-                },
-                "visibility": {
-                    "type": "string",
-                    "enum": [
-                        "private",
-                        "organisation",
-                        "public"
-                    ],
-                    "description": "Who can view the jobshare."
-                },
-                "hashkey": {
-                    "type": "integer",
-                    "example": 1769919554
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "Language": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "example": "English"
-                },
-                "code": {
-                    "type": "string",
-                    "description": "3 character language code",
-                    "example": "eng"
-                },
-                "locale": {
-                    "type": "string",
-                    "example": "en_GB"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "Mapstyle": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "mapstyle_set_id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "NEWS10k.xml"
-                },
-                "preview_image": {
-                    "type": "string",
-                    "description": "url to the mapstyle preview image"
-                },
-                "scale_min": {
-                    "minimum": 0,
-                    "example": 0,
-                    "description": "The lowest scale that the Mapstyle can be used at. Must be smaller than scale_min"
-                },
-                "scale_max": {
-                    "minimum": 1,
-                    "example": 16249,
-                    "description": "The highest scale that the Mapstyle can be used at. Must be greater than scale_min"
-                },
-                "description": {
-                    "type": "string",
-                    "example": 70
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "MapstyleSet": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Clear News"
-                },
-                "description": {
-                    "type": "string",
-                    "example": "A clean and simplified bright map style."
-                },
-                "version": {
-                    "type": "number",
-                    "format": "double",
-                    "example": 2
-                },
-                "supports_svg": {
-                    "type": "boolean",
-                    "description": "Indicates if the MapstyleSet supports SVG output",
-                    "example": false
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "mapstyles": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Mapstyle"
-                    }
-                }
-            }
-        },
-        "Notification": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "title": {
-                    "type": "string",
-                    "example": "Maps4News Maintenance message"
-                },
-                "description": {
-                    "type": "string",
-                    "example": "Maps4News Maintenance Message: Maintenance is scheduled for Tuesday, 13 October 2015, between 05:00 AM and 05:30 AM GMT. {...}"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "Organisation": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "ACME Inc Editors"
-                },
-                "company": {
-                    "type": "string",
-                    "example": "ACME Inc"
-                },
-                "city": {
-                    "type": "string",
-                    "example": "New York City"
-                },
-                "country": {
-                    "type": "string",
-                    "example": "United States"
-                },
-                "address": {
-                    "type": "string",
-                    "example": "14 North Moore Street"
-                },
-                "credits": {
-                    "type": "integer",
-                    "description": "Availible credits",
-                    "example": 27
-                },
-                "sales_representative": {
-                    "$ref": "#/definitions/User"
-                },
-                "manager": {
-                    "$ref": "#/definitions/User"
-                },
-                "fonts": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Font"
-                    }
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "users": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/User"
-                    }
-                }
-            }
-        },
-        "SingleSignOn": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "user": {
-                    "$ref": "#/definitions/User"
-                },
-                "sso_id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "type": {
-                    "type": "string",
-                    "example": "accounts.google.com",
-                    "description": "The sso service"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "StudioLog": {
-            "type": "object"
-        },
-        "Svg": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "svg_set": {
-                    "$ref": "#/definitions/SvgSet"
-                },
-                "name": {
-                    "type": "string",
-                    "example": "White Box",
-                    "description": "The name of the svg"
-                },
-                "svg_string": {
-                    "type": "string",
-                    "format": "svg"
-                },
-                "resize_factor": {
-                    "type": "integer",
-                    "format": "float",
-                    "example": 0.1
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "SvgSet": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Textboxes",
-                    "description": "The name of the svg set"
-                },
-                "svg_set_type": {
-                    "$ref": "#/definitions/SvgSetType"
-                },
-                "supports_interactive": {
-                    "type": "boolean",
-                    "example": true,
-                    "description": "If the svg set is supported by interactive"
-                },
-                "import": {
-                    "type": "boolean",
-                    "example": true
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "SvgSetType": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Icons"
-                }
-            }
-        },
-        "User": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "description": "Full Name",
-                    "example": "John Doe"
-                },
-                "email": {
-                    "type": "string",
-                    "example": "john.doe@example.com"
-                },
-                "phone": {
-                    "type": "string",
-                    "example": "+1 555 2368",
-                    "description": "Who you gonna call? https://nnmm.nl/?F7p"
-                },
-                "profession": {
-                    "type": "string",
-                    "example": "Editor"
-                },
-                "organisation_id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "language": {
-                    "$ref": "#/definitions/Language"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "VectorLayer": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string"
-                },
-                "path": {
-                    "type": "string"
-                },
-                "bounding_box": {
-                    "type": "string"
-                },
-                "version": {
-                    "type": "integer",
-                    "format": "double"
-                },
-                "image": {
-                    "type": "string"
-                },
-                "scale_min": {
-                    "minimum": 0,
-                    "example": 0,
-                    "description": "The lowest scale that the vector layer can be used at. Must be smaller than scale_max."
-                },
-                "scale_max": {
-                    "minimum": 1,
-                    "example": 16249,
-                    "description": "The highest scale that the vector layer can be used at. Must be greater than scale_min."
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": {
         }
+      }
+    },
+    "/channels.json": {
+      "get": {
+        "description": "This method return a list of existing channels, depending on the specified scope.\nScope can be either +view+, +publish+ or +submit+ :\n\n[view] default scope, returns the list of channels that can be viewed by the requester\n\n[publish] returns the list of channels the requester can control as a publisher, i.e. can\nselect _On_ _Air_ video and audio\n\n[submit] returns the list of channels on which the requester can submit new cast\n",
+        "summary": "List channels",
+        "tags": [
+          "channels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "scope",
+            "in": "query",
+            "description": "Scope, i.e. view, publish or submit",
+            "type": "string",
+            "required": false
+          }
+        ]
+      },
+      "post": {
+        "summary": "Create a new channel",
+        "tags": [
+          "channels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      }
+    },
+    "/users/{id}/channels.json": {
+      "get": {
+        "summary": "List videocasts owned by a given user",
+        "tags": [
+          "channels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "post": {
+        "summary": "Create a new channel for an existing user",
+        "tags": [
+          "channels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/channels/{id}.json": {
+      "get": {
+        "summary": "Get details on a specific channel",
+        "tags": [
+          "channels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Channel unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "put": {
+        "summary": "Update an existing channel",
+        "tags": [
+          "channels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Channel unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Update an existing channel",
+        "tags": [
+          "channels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Channel unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete an existing channel",
+        "tags": [
+          "channels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Channel unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/channels/{id}/selected.json": {
+      "get": {
+        "summary": "Retreive active videocast for existing channel",
+        "tags": [
+          "channels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Channel unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "put|patch": {
+        "summary": "Update selected videocast for an existing channel",
+        "tags": [
+          "channels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Channel unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Unselect active videocast for existing channel",
+        "tags": [
+          "channels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Channel unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/channels/{id}/ice_servers.json": {
+      "get": {
+        "summary": "List Ice Servers available for a given channel",
+        "tags": [
+          "channels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Channel unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/channels/{id}/invite.json": {
+      "post": {
+        "summary": "Create a new invite on a given channel",
+        "tags": [
+          "channels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Channel unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/channels/{id}/request.json": {
+      "post": {
+        "summary": "Create a new request for current user on a given channel",
+        "tags": [
+          "channels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Channel unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/channels/{id}/subscriptions.json": {
+      "get": {
+        "summary": "List subscriptions of a given channel",
+        "tags": [
+          "channels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Channel unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/control_rooms.json": {
+      "get": {
+        "summary": "List all active control rooms",
+        "tags": [
+          "control_rooms"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      }
+    },
+    "/channels/{id}/control_rooms.json": {
+      "get": {
+        "summary": "List control rooms for a given channel",
+        "tags": [
+          "control_rooms"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Control room unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "post": {
+        "summary": "Create a new control room",
+        "tags": [
+          "control_rooms"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Control room unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/control_rooms/{id}.json": {
+      "get": {
+        "summary": "Get details on a specific control room",
+        "tags": [
+          "control_rooms"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Control room unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete an existing control room",
+        "tags": [
+          "control_rooms"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Control room unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/control_rooms/{id}/sdp_offer.json": {
+      "get": {
+        "summary": "Retreive SDP description (offer) of the controlled channel",
+        "tags": [
+          "control_rooms"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Control room unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/control_rooms/{id}/sdp_answer.json": {
+      "post": {
+        "summary": "Provide SDP description (answer) for this controlling session",
+        "tags": [
+          "control_rooms"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Control room unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "get": {
+        "summary": "Retreive SDP description (answer) for this control room",
+        "tags": [
+          "control_rooms"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Control room unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/viewers/:viewer_id/ice_candidates.json": {
+      "get": {
+        "summary": "List all candidates for a given peer",
+        "tags": [
+          "ice_candidates"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "peer_id",
+            "in": "path",
+            "description": "Peer unique identifier",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "peer_type",
+            "in": "query",
+            "description": "Peer route: either +videocasts+ +control rooms+ or +previews+",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "post": {
+        "summary": "Create new ICE candidate",
+        "tags": [
+          "ice_candidates"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "peer_id",
+            "in": "path",
+            "description": "Peer (videocast) unique identifier",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "peer_type",
+            "in": "query",
+            "description": "Peer route: either +videocasts+ +control rooms+ or +previews+",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/viewers/:viewer_id/ice_candidates/{id}.json": {
+      "get": {
+        "summary": "Get details on a specific candidate",
+        "tags": [
+          "ice_candidates"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Ice candidate unique identifier",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "peer_id",
+            "in": "path",
+            "description": "Peer unique identifier",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "peer_type",
+            "in": "query",
+            "description": "Peer route: either +videocasts+ +control rooms+ or +previews+",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/control_rooms/{id}/previews.json": {
+      "get": {
+        "summary": "List previews for a given control room",
+        "tags": [
+          "previews"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "control_room_id",
+            "in": "path",
+            "description": "Control room unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "post": {
+        "summary": "Create a new preview",
+        "tags": [
+          "previews"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "control_room_id",
+            "in": "path",
+            "description": "Control room that hosts this preview",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "preview_videocast_id",
+            "in": "formData",
+            "description": "Preview information",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/previews/{id}.json": {
+      "get": {
+        "summary": "Get details on a specific preview",
+        "tags": [
+          "previews"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Preview unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete an existing preview",
+        "tags": [
+          "previews"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Preview unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/previews/{id}/sdp_offer.json": {
+      "get": {
+        "summary": "Retreive SDP description (offer) of the monitored videocast",
+        "tags": [
+          "previews"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Preview unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/previews/{id}/sdp_answer.json": {
+      "post": {
+        "summary": "Provide SDP description (answer) for this monitoring session",
+        "tags": [
+          "previews"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "control_room_id",
+            "in": "path",
+            "description": "Control room unique identifier",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "preview",
+            "in": "formData",
+            "description": "Preview information",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "get": {
+        "summary": "Retreive SDP description (answer) for this preview",
+        "tags": [
+          "previews"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Preview unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/users/:user_id/create.json": {
+      "post": {
+        "summary": "create a new user",
+        "tags": [
+          "signup"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      }
+    },
+    "/subscription_tokens.json": {
+      "post": {
+        "summary": "Create a subscription token",
+        "tags": [
+          "subscription_tokens"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      }
+    },
+    "/subscriptions.json": {
+      "get": {
+        "summary": "List subscriptions for current user",
+        "tags": [
+          "subscriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      },
+      "post": {
+        "summary": "Create a subscription, allow user to get acces to a channel",
+        "tags": [
+          "subscriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "formData",
+            "description": "Subscription token",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/subscriptions/{id}.json": {
+      "get": {
+        "summary": "Get details on a specific subscription",
+        "tags": [
+          "subscriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Subscription unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "put": {
+        "summary": "Update an existing subscription, used to accept or revoke invites and requests",
+        "tags": [
+          "subscriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Subscription unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Update an existing subscription, used to accept or revoke invites and requests",
+        "tags": [
+          "subscriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Subscription unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete an existing subscription",
+        "tags": [
+          "subscriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Subscription unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/users.json": {
+      "get": {
+        "summary": "List all users",
+        "tags": [
+          "users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      },
+      "post": {
+        "summary": "Create a new user",
+        "tags": [
+          "users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/users/{id}.json": {
+      "get": {
+        "summary": "Get details on a specific user",
+        "tags": [
+          "users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "put": {
+        "summary": "Update an existing user",
+        "tags": [
+          "users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Update an existing user",
+        "tags": [
+          "users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete user",
+        "tags": [
+          "users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/users/me.json": {
+      "get": {
+        "summary": "Get current user details",
+        "tags": [
+          "users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      }
+    },
+    "/videocasts.json": {
+      "get": {
+        "summary": "List all videocasts",
+        "tags": [
+          "videocasts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      }
+    },
+    "/channels/{id}/videocasts.json": {
+      "get": {
+        "description": "This method return a list of existing videocasts, depending on the specified scope.\nScope can be either +live+, +replay+ or +all+ :\n* [all] default scope, returns the list all of videocasts for the given channel\n* [live] returns the list of currently _On_ _Air_ videocasts\n* [replay] returns the list of recorded videocasts for the given channel\n",
+        "summary": "List videocasts published in a given channel",
+        "tags": [
+          "videocasts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "channel_id",
+            "in": "path",
+            "description": "Channel unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "post": {
+        "summary": "Create a new videocast",
+        "tags": [
+          "videocasts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "channel_id",
+            "in": "path",
+            "description": "Channel on which this videocast should be published",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/users/{id}/videocasts.json": {
+      "get": {
+        "summary": "List videocasts published by a given user",
+        "tags": [
+          "videocasts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/videocasts/{id}.json": {
+      "get": {
+        "summary": "Get details on a specific videocast",
+        "tags": [
+          "videocasts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Videocast unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "put": {
+        "summary": "Update an existing videocast",
+        "tags": [
+          "videocasts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      },
+      "patch": {
+        "summary": "Update an existing videocast",
+        "tags": [
+          "videocasts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      },
+      "delete": {
+        "summary": "Delete an existing videocast",
+        "tags": [
+          "videocasts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Videocast unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/videocasts/{id}/sdp_offer.json": {
+      "post": {
+        "summary": "Provide SDP description (offer) for this videocast",
+        "tags": [
+          "videocasts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      },
+      "get": {
+        "summary": "Retreive SDP description (offer) for this videocast",
+        "tags": [
+          "videocasts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Videocast unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "description": "Delete SDP description (offer) for this videocast, and then hangup the connection on the\nJanus gateway.\n",
+        "summary": "Delete SDP",
+        "tags": [
+          "videocasts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Videocast unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/videocasts/{id}/sdp_answer.json": {
+      "get": {
+        "summary": "Retreive SDP description (answer) for this videocast",
+        "tags": [
+          "videocasts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Videocast unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/viewers.json": {
+      "get": {
+        "summary": "List all active viewers",
+        "tags": [
+          "viewers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      }
+    },
+    "/channels/{id}/viewers.json": {
+      "get": {
+        "summary": "List viewers for a given channel",
+        "tags": [
+          "viewers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "channel_id",
+            "in": "path",
+            "description": "Channel unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "post": {
+        "summary": "Create a new viewer",
+        "tags": [
+          "viewers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "channel_id",
+            "in": "path",
+            "description": "Channel that this new viewer should display",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/viewers/{id}.json": {
+      "get": {
+        "summary": "Get details on a specific viewer",
+        "tags": [
+          "viewers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Viewer unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete an existing viewer",
+        "tags": [
+          "viewers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Viewer unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/viewers/{id}/sdp_offer.json": {
+      "get": {
+        "description": "Retreive SDP description (offer) of the controlled channel",
+        "summary": "Retreive SDP",
+        "tags": [
+          "viewers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Viewer unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/viewers/{id}/sdp_answer.json": {
+      "post": {
+        "description": "Provide SDP description (answer) for this controlling session",
+        "summary": "Provide SDP",
+        "tags": [
+          "viewers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Viewer unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "get": {
+        "summary": "Retreive SDP description (answer) for this viewer",
+        "tags": [
+          "viewers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Viewer unique identifier",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
     }
+  },
+  "tags": [
+    {
+      "name": "cgus",
+      "description": "CGUs management"
+    },
+    {
+      "name": "channels",
+      "description": "Dazzl channels management"
+    },
+    {
+      "name": "control_rooms",
+      "description": "Dazzl Control Room Management"
+    },
+    {
+      "name": "ice_candidates",
+      "description": "ICE candidates for Dazzl peers (videocasts or players)"
+    },
+    {
+      "name": "previews",
+      "description": "Dazzl previews management"
+    },
+    {
+      "name": "signup",
+      "description": "Dazzl Singup management"
+    },
+    {
+      "name": "subscription_tokens",
+      "description": "Subscriptions for videocast manage token"
+    },
+    {
+      "name": "subscriptions",
+      "description": "Subscriptions for videocast authorization management"
+    },
+    {
+      "name": "users",
+      "description": "Dazzl Users management"
+    },
+    {
+      "name": "videocasts",
+      "description": "Dazzl live streams"
+    },
+    {
+      "name": "viewers",
+      "description": "Dazzl Viewers management"
+    }
+  ],
+  "definitions": {
+    "Cgu": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "version": {
+          "type": "string"
+        },
+        "markdown": {
+          "type": "string"
+        }
+      }
+    },
+    "Channel": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "title": {
+          "type": "string"
+        },
+        "janus_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "preferred_janus_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "autoselect": {
+          "type": "boolean"
+        },
+        "fir_frequency": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "bitrate": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "monitor_bitrate": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "framerate": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "resolution": {
+          "type": "string"
+        },
+        "aspect_ratio": {
+          "type": "string"
+        },
+        "record": {
+          "type": "boolean"
+        },
+        "forward": {
+          "type": "boolean"
+        },
+        "selected_id": {
+          "type": "string"
+        },
+        "_video_codec": {
+          "type": "string"
+        },
+        "publisher_id": {
+          "type": "string"
+        },
+        "janus_server_id": {
+          "type": "string"
+        }
+      }
+    },
+    "ControlRoom": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sdp_offer": {
+          "type": "string"
+        },
+        "sdp_answer": {
+          "type": "string"
+        },
+        "janus_videocast_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "_type": {
+          "type": "string"
+        },
+        "accessed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "owner_id": {
+          "type": "string"
+        },
+        "channel_id": {
+          "type": "string"
+        }
+      }
+    },
+    "IceCandidate": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "candidate": {
+          "type": "string"
+        },
+        "sdpMid": {
+          "type": "string"
+        },
+        "sdpMLineIndex": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "sent": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Preview": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sdp_offer": {
+          "type": "string"
+        },
+        "sdp_answer": {
+          "type": "string"
+        },
+        "janus_videocast_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "_type": {
+          "type": "string"
+        },
+        "control_room_id": {
+          "type": "string"
+        },
+        "videocast_id": {
+          "type": "string"
+        }
+      }
+    },
+    "SubscriptionToken": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "token": {
+          "type": "string"
+        },
+        "expires_in": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "channel_id": {
+          "type": "string"
+        }
+      }
+    },
+    "Subscription": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "_status": {
+          "type": "string"
+        },
+        "expires_in": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "channel_id": {
+          "type": "string"
+        },
+        "videocaster_id": {
+          "type": "string"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "isAdmin": {
+          "type": "boolean"
+        },
+        "email": {
+          "type": "string"
+        },
+        "encrypted_password": {
+          "type": "string"
+        },
+        "remember_created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "reset_password_token": {
+          "type": "string"
+        },
+        "reset_password_sent_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sign_in_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "current_sign_in_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "last_sign_in_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "current_sign_in_ip": {
+          "type": "string"
+        },
+        "last_sign_in_ip": {
+          "type": "string"
+        },
+        "birthday": {
+          "type": "string",
+          "format": "date"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "cgu_id": {
+          "type": "string"
+        }
+      }
+    },
+    "Videocast": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sdp_offer": {
+          "type": "string"
+        },
+        "sdp_answer": {
+          "type": "string"
+        },
+        "janus_videocast_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "_type": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "owner_id": {
+          "type": "string"
+        },
+        "channel_id": {
+          "type": "string"
+        }
+      }
+    },
+    "Viewer": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sdp_offer": {
+          "type": "string"
+        },
+        "sdp_answer": {
+          "type": "string"
+        },
+        "janus_videocast_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "_type": {
+          "type": "string"
+        },
+        "owner_id": {
+          "type": "string"
+        },
+        "channel_id": {
+          "type": "string"
+        }
+      }
+    },
+    "IceServer": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "_protocol": {
+          "type": "string"
+        },
+        "_transport": {
+          "type": "string"
+        },
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        },
+        "credential": {
+          "type": "string"
+        }
+      }
+    },
+    "JanusServer": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "_protocol": {
+          "type": "string"
+        },
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "path": {
+          "type": "string"
+        },
+        "janus_session": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "janus_handle": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    }
+  }
 }
