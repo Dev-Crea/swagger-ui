@@ -1627,6 +1627,127 @@
           "application/json"
         ],
         "parameters": {
+        },
+        "deprecated": true
+      }
+    },
+    "/users/{id}/confirmation/phone.json": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "summary": "Send phone confirmation",
+        "tags": [
+          "users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "summary": "Accept current phone",
+        "tags": [
+          "users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      }
+    },
+    "/users/{id}/confirmation/email.json": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "summary": "Send email confirmation",
+        "tags": [
+          "users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "summary": "Accept current email",
+        "tags": [
+          "users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      }
+    },
+    "/users/{id}/lock.json": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "summary": "Lock account",
+        "tags": [
+          "users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      },
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "summary": "Unlock account",
+        "tags": [
+          "users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": {
         }
       }
     },
@@ -2136,6 +2257,237 @@
             "in": "path",
             "description": "Viewer unique identifier",
             "type": "string",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/me.json": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "summary": "Get details on me (current user)",
+        "tags": [
+          "me"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "summary": "Update my information, expect phone, email and password.",
+        "tags": [
+          "me"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "body",
+            "description": "My name",
+            "schema": {
+              "$ref": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "lastname",
+            "in": "body",
+            "description": "My lastname",
+            "schema": {
+              "$ref": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "birthday",
+            "in": "body",
+            "description": "My birthday",
+            "schema": {
+              "$ref": "string"
+            },
+            "required": false
+          }
+        ]
+      },
+      "patch": {
+        "consumes": [
+          "application/json"
+        ],
+        "summary": "Update my information, expect phone, email and password.",
+        "tags": [
+          "me"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "body",
+            "description": "My name",
+            "schema": {
+              "$ref": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "lastname",
+            "in": "body",
+            "description": "My lastname",
+            "schema": {
+              "$ref": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "birthday",
+            "in": "body",
+            "description": "My birthday",
+            "schema": {
+              "$ref": "string"
+            },
+            "required": false
+          }
+        ]
+      },
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "summary": "Delete user",
+        "tags": [
+          "me"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": {
+        }
+      }
+    },
+    "/me/password.json": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "summary": "Update my password",
+        "tags": [
+          "me"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "password_new",
+            "in": "body",
+            "description": "My new password",
+            "schema": {
+              "$ref": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "password_confirmation",
+            "in": "body",
+            "description": "My new password confirmation",
+            "schema": {
+              "$ref": "string"
+            },
+            "required": true
+          }
+        ]
+      }
+    },
+    "/me/email.json": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "summary": "Update my email",
+        "tags": [
+          "me"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "body",
+            "description": "My new email",
+            "schema": {
+              "$ref": "string"
+            },
+            "required": true
+          }
+        ]
+      }
+    },
+    "/me/phone.json": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "summary": "Update my phone number",
+        "tags": [
+          "me"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "body",
+            "description": "My new phone number",
+            "schema": {
+              "$ref": "string"
+            },
             "required": true
           }
         ]
