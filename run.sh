@@ -2,7 +2,7 @@
 
 set -e
 
-# File repalce
+# File replace
 INDEX='/app/dist/index.html'
 
 # Replace URL
